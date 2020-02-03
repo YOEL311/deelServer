@@ -1,0 +1,19 @@
+{
+  "name": "Croopy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/storage": "^4.3.0",
+    "croppie": "^2.6.4",
+    "install": "^0.13.0",
+    "jquery": "^3.4.1",
+    "npm": "^6.13.7"
+  }
+}
