@@ -1,154 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!--    <script rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
+  <link href="style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css" rel="stylesheet">
 
 
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="croppie.css"/>
-
+  <meta charset="UTF-8">
+  <title>Title</title>
 </head>
+
 <body>
-
-<div style="background: #FFF;
-  padding: 20px;
-  margin: 20px;" id="page">
-
-
-    <div style="
-    width:300px;
-    height: 200px;" id="item">
-
-
+  <input type='file' onchange="readURL(this);" />
+  <div id="page">
+    <div id="item">
     </div>
-</div>
-<div>
-    <button id="btn">
-        חתוך
-    </button>
-</div>
-<progress id="uploader" value="0" max="100">0%</progress>
-<div style="
-    width:700px;
-    height: 600px;"
-     id="result">
+  </div>
 
-</div>
+  <progress id="uploaderProgress" value="0" max="100">0%
+  </progress>
 
-<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+  <br>
+  </div>
 
+  <button id="btnUpload"> העלה
+  </button>
 
-<script src="index.js"></script>
+  <ul id="ulLink">
+  </ul>
 
-<script>
-  var basic = $('#item').croppie({
-    viewport: {
-      width: 200,
-      height: 150
-    },
-  });
+  <!--<div>-->
+  <!--    <button id="btn">-->
+  <!--        תצוגה מקדימה-->
+  <!--    </button>-->
+  <!--</div>-->
+  <div id="result">
+  </div>
 
-  basic.croppie('bind', {
-    url: './image/shila.png',
-    // url: "https://www.picshare.co.il/m_pictures/img148689.jpg",
-  });
-  let resultDiv = document.getElementById("result");
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 
 
-  function toResult() {
-
-    console.log("to result");
-    basic.croppie('result', 'canvas').then(function (resultC) {
-
-      resultDiv.innerHTML = '<a id="save" href="' + resultC + '" download="resultC"><img src="' + resultC + '" /><br><button>Download</button></a>'
-      console.log(resultC);
-    });
-
-    basic.croppie('result', 'blob').then(function (result) {
-      var firebaseConfig = {
-        apiKey: "AIzaSyAdRZQRUKFTbqfSTaVZRB9cJY7DPp9p_24",
-        authDomain: "deels-266720.firebaseapp.com",
-        databaseURL: "https://deels-266720.firebaseio.com",
-        projectId: "deels-266720",
-        storageBucket: "deels-266720.appspot.com",
-        messagingSenderId: "927481565824",
-        appId: "1:927481565824:web:8373fb4a66a90251db4c65",
-        measurementId: "G-J6HRJZHL9L"
-      };
-
-      var ref = firebase.storage().ref('img/' + Date.now());
-
-      // ref.put(result).then(function (snapshot) {
-      //   console.log('Uploaded a blob or file!');
-      // });
-
-
-      var task = ref.put(result);
-      var uploader = document.getElementById('uploader');
-
-      task.on('state_changed', function progress(snapshot) {
-        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        uploader.value = percentage;
-
-      }, function error(err) {
-
-
-      }, function complete() {
-
-      });
-    });
-
-
-  }
-
-  document.getElementById("btn").addEventListener("click", toResult);
-
-
-</script>
-<div class="mainDiv" align="right">
-    <h1 align="left">Firebase File Upload</h1>
-    <progress id="uploader2" value="0" max="100">0%</progress>
-    <input type="file" id="fileButton" value="upload"/>
-</div>
-<script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyAdRZQRUKFTbqfSTaVZRB9cJY7DPp9p_24",
-    authDomain: "deels-266720.firebaseapp.com",
-    databaseURL: "https://deels-266720.firebaseio.com",
-    projectId: "deels-266720",
-    storageBucket: "deels-266720.appspot.com",
-    messagingSenderId: "927481565824",
-    appId: "1:927481565824:web:8373fb4a66a90251db4c65",
-    measurementId: "G-J6HRJZHL9L"
-  };
-
-
-  var uploader = document.getElementById('uploader2');
-  var fileButton = document.getElementById('fileButton');
-
-  fileButton.addEventListener('change', function (e) {
-    var file = e.target.files[0];
-    var storageRef = firebase.storage().ref('img/' + file.name);
-    var task = storageRef.put(file);
-    task.on('state_changed', function progress(snapshot) {
-      var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      uploader.value = percentage;
-
-    }, function error(err) {
-
-
-    }, function complete() {
-
-    });
-  });
-
-</script>
+  <script src="index.js"></script>
 </body>
+
 </html>

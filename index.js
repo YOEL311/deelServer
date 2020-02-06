@@ -1,45 +1,72 @@
+
 var firebaseConfig = {
-  apiKey: "AIzaSyAdRZQRUKFTbqfSTaVZRB9cJY7DPp9p_24",
-  authDomain: "deels-266720.firebaseapp.com",
-  databaseURL: "https://deels-266720.firebaseio.com",
-  projectId: "deels-266720",
-  storageBucket: "deels-266720.appspot.com",
-  messagingSenderId: "927481565824",
-  appId: "1:927481565824:web:8373fb4a66a90251db4c65",
-  measurementId: "G-J6HRJZHL9L"
+    apiKey: "AIzaSyAdRZQRUKFTbqfSTaVZRB9cJY7DPp9p_24",
+    authDomain: "deels-266720.firebaseapp.com",
+    databaseURL: "https://deels-266720.firebaseio.com",
+    projectId: "deels-266720",
+    storageBucket: "deels-266720.appspot.com",
+    messagingSenderId: "927481565824",
+    appId: "1:927481565824:web:8373fb4a66a90251db4c65",
+    measurementId: "G-J6HRJZHL9L"
 };
-// Initialize Firebase
+
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-console.log("index js");
 
-var storage = firebase.storage();
-console.log("index js 2");
+var basic = $('#item').croppie({
+    viewport: {
+        width: 200,
+        height: 150
+    },
+});
 
-var storageRef = storage.ref();
-console.log("index js 3");
+basic.croppie('bind', {
+    url: './image/img.jpg',
+});
+let resultDiv = document.getElementById("result");
 
-var imagesRef = storageRef.child('images');
-var ref = storageRef.child('images');
-console.log("index js 4");
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            basic.croppie('bind', {
+                url: e.target.result,
+            });
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
-var file = './image/result.png'
-// fileNEw = new File(file);
-//
-// var message = 'This is my message.';
-// ref.putString(message).then(function (snapshot) {
-//   console.log('Uploaded a raw string!');
-// });
-//
-// function getFileName(fileInput) {
-//   file = fileInput.files[0];
-//   fileName = file.name;
-//   storageRef = firebase.storage().ref(storageFolder + fileName);
-//   uploadTask = storageRef.put(file);
-// };
-//
-// getFileName(fileNEw)
+function toDisplayResult() {
+    basic.croppie('result', 'canvas').then(function (resultC) {
+        resultDiv.innerHTML = '<a id="save" href="' + resultC + '" download="resultC">' +
+            '<img src="' + resultC + '" />' +
+            '<br><button>Download</button>' +
+            '</a>'
+    });
+    btnUload.style.display = "inline"
+}
 
-var externalImageUrl = 'https://i1.wp.com/www.simplifiedcoding.net/wp-content/uploads/2016/09/belal-khan-2.jpg?zoom=1.25&ssl=1';
+function toUploadResult() {
+    basic.croppie('result', 'blob').then(function (result) {
+        var ref = firebase.storage().ref('img/' + Date.now());
+        var task = ref.put(result);
+        var uploader = document.getElementById('uploaderProgress');
+        task.on('state_changed', function progress(snapshot) {
+            var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            uploader.value = percentage;
+        }, function error(err) {
+            console.log(err);
+        }, function complete() {
+            uploader.style.background = 'blue'
+            task.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                console.log('File available at', downloadURL);
+                // var linkToDownload = document.getElementById("linkToUp")
+                let li = '<li><a href="" id="linkToUpload">link</a></li>'
+                $("#ulLink").append(li);
+                $("linkToUp").href = downloadURL
+            });
+        });
+    });
+}
 
-// ref.child('whatever').set(externalImageUrl);
+$("#btnUpload").on('click', toUploadResult)

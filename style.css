@@ -1,0 +1,29 @@
+#page {
+    background: #FFF;
+    padding: 20px;
+    margin: 20px;
+}
+
+#item {
+    width: 400px;
+    height: 600px;
+}
+
+#demo-basic {
+    width: 200px;
+    height: 300px;
+}
+
+#uploaderProgress {
+    border: none;
+    width: 400px;
+    background: gray;
+    border: 0;
+    height: 40px;
+    border-radius: 20px;
+}
+
+#result {
+    width: 300px;
+    height: 200px;
+}
